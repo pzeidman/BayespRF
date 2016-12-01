@@ -12,8 +12,7 @@ A good way to get started is to try fitting a pRF model using an example dataset
 
 1. Copy the 'example_3T' folder, included with BayespRF, to a location of your choice on your computer.
 2. Navigate to the 'example_3T/scripts' folder in Matlab.
-3. Edit the 'Run_first_level' script - set the data_root_dir variable to the directory where you would like to store the example dataset.
-4. Run the 'Run_first_level' script. The GLM will be estimated and timeseries extracted for each of 10 runs.
+3. Open the 'Run_first_level' script. Set the data_root_dir variable to the directory where you would like to store the example dataset. Then run the script. The GLM will be estimated and timeseries extracted for each of 10 runs.
 
 **Part 2: Running the pRF analysis**
 
