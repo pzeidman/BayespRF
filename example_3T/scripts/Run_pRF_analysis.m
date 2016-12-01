@@ -71,10 +71,3 @@ PRF_est = spm_prf_analyse('estimate',prf_file,options);
 prf_file = fullfile(glm_dir,'PRF_SamSrf_example.mat');
 
 spm_prf_review(prf_file, 3439);
-
-%% Merge
-P = {};
-for i = 1:186
-    P{i} = sprintf('models_wb/PRF_SamSrf_example_%d.mat',i);
-end
-spm_prf_analyse('merge',P,pwd);
