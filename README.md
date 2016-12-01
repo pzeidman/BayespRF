@@ -10,7 +10,7 @@ Advantages:
 
 Disadvantages:
 
-- Model estimation is relatively expensive (~100 seconds per voxel per CPU core)
+- Model estimation is computationally expensive (~100 seconds per voxel per CPU core)
 - Cortical surface projection is not yet implemented
 
 ## Installing
