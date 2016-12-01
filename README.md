@@ -45,7 +45,7 @@ The structure U will have one entry per time point (t) of the stimulus. E.g. if 
 - pmax is the stimulus diameter in degrees of visual angle
 - pmin is the minimum entertained pRF size in degrees of visual angle
 
-*Note: The model has been tested with a stimulus resolution downsampled to a [41 x 41] grid. We recommend you do the same. See the example in scripts/prepare_inputs_polar_samsrf.m
+*Note: The model has been tested with a stimulus resolution downsampled to a [41 x 41] grid. We recommend you do the same. See the example in scripts/prepare_inputs_polar_samsrf.m*
 
 **2. Prepare your timeseries**
 
@@ -80,3 +80,30 @@ For a full list of options, see the help in spm_prf_analyse. Here we have just s
 - name will be used for the PRF file's filename
 - model is the pRF model to use. There are a few to choose from (in the response_functions folder). Here we're using a circular pRF with polar coordinates
 - B0 is the strength of the scanner's magnetic field in teslas. This influences several priors in the observation model.
+
+This will create a file called PRF_name.mat in the same folder as the SPM.mat for this subject.
+
+**4. Estimate the pRF model**
+
+The evidence (free energy) and parameters of the model will now be estimated. For this example, we will only estimated one voxel:
+
+```Matlab
+% Estimation options
+options  = struct('voxels',3439);
+
+% Estimate
+PRF_est = spm_prf_analyse('estimate',prf_file,options);
+```
+
+For a full set of estimation options, including the use of parallel computing, see the help in the spm_prf_analyse function.
+
+**5. Review the results**
+
+To review a pRF model's results, use the spm_prf_review function:
+
+```Matlab
+prf_file = fullfile(glm_dir,'PRF_SamSrf_example.mat');
+
+spm_prf_review(prf_file, 3439);
+```
+Here we ask it to review only the voxel we have estimated (3439). If we don't give this praameter, and if the pRF file contains multiple voxel, then spm_prf_review will attempt to build a parameteric map of the voxels across the brain.
