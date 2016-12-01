@@ -13,6 +13,8 @@ Disadvantages:
 - Model estimation is computationally expensive (~100 seconds per voxel per CPU core)
 - Cortical surface projection is not yet implemented
 
+*The toolbox is very new and still in development. So please enjoy using it, but treat results with caution*
+
 ## Installing
 1. Copy the 'toolbox' folder to a location on your computer of your choice.
 2. Add the 'toolbox' folder to your Matlab path with subfolders.
