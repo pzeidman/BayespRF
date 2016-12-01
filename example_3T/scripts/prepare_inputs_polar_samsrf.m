@@ -48,7 +48,7 @@ for t = 1:n
     U(t).angle = angle;        % Angle
     U(t).ons = TR * (t-1);     % Onset (secs)
     U(t).dur = stim_duration;  % Duration (secs)
-    U(t).dt  = TR/nmicrotime;  % 1 bin=1/8 second, i.e. 8 bins per second
+    U(t).dt  = TR/nmicrotime;  % 1 bin=1/16 second, i.e. 16 bins per second
     U(t).pmax = stim_diameter; % Stimulus diameter
     U(t).pmin = 0.5;           % Minimum PRF size
 
