@@ -38,9 +38,45 @@ You need to give BayespRF the timing of your experimental stimuli - in other wor
     U(t).pmin = 0.5;           % Minimum PRF size
 ```
 
-The structure U will have one entry per time point (t) of the stimulus. E.g. if a bar crosses the display in 20 steps, and this happens 100 times, there will be 2000 entries in U. The structure contains fields which describe the stimulus at time t:
+The structure U will have one entry per time point (t) of the stimulus. E.g. if a bar crosses the display in 20 steps, and this happens 100 times, there will be 2000 entries in U. The U structure contains fields which describe the stimulus at time t:
 - Dist and angle are vectors of the polar coordinates illuminated at this time step. 
 - Ons and dur specify the onset and duration of this stimulus in seconds. Here we've set this to assume one frame of the stimulus per TR (the time taken to acquire an MRI volume), but this need not be the case.
 - Modelling is conducted at a finer timescale than MRI acquisitions. Each stimulus time step will be divided into short 'microtime' bins. dt is the length of each bin in seconds (typically nmicrotime=16).
 - pmax is the stimulus diameter in degrees of visual angle
 - pmin is the minimum entertained pRF size in degrees of visual angle
+
+*Note: The model has been tested with a stimulus resolution downsampled to a [41 x 41] grid. We recommend you do the same. See the example in scripts/prepare_inputs_polar_samsrf.m
+
+**2. Prepare your timeseries**
+
+Using SPM to extract timeseries for pRF analysis is the recommended method. When viewing a single subject's SPM result, click Eigenvariate in the small grey window and follow the prompts. This will create a file named VOI_xx.mat, containing a summary timeseries, as well as timeseries for every voxel in the ROI. Create a cell array containing the filenames for each session's VOI:
+
+```Matlab
+xY = cell(1,num_sess);
+for i = 1:num_sess
+    filename = sprintf('VOI_Mask_%d.mat',sess(i));
+    xY{i}    = fullfile(glm_dir,filename);
+end
+```
+
+**3. Specify your pRF model**
+
+Armed with your experiment timings U and timeseries xY, you can now specify your pRF model. This consists of creating an options structure with various settings, and calling the spm_prf_analyse function in 'specify' mode:
+
+```Matlab
+% Set pRF specification options
+options = struct('TE', TE,...
+                 'voxel_wise', true,...
+                 'name', 'SamSrf_example',...
+                 'model', 'spm_prf_fcn_gaussian_1sigma_DCP2',...
+                 'B0',3);
+             
+% Specify pRF model (.mat file will be stored in the GLM directory)
+PRF = spm_prf_analyse('specify',SPM,xY,U,options);
+```
+For a full list of options, see the help in spm_prf_analyse. Here we have just set a few key options: 
+- TE is the echo time of our scanner, and is used in the neurosvascular model. 
+- voxel_wise tells the model to work on a voxel-by-voxel basis, rather than using the summary (ROI) timeseries
+- name will be used for the PRF file's filename
+- model is the pRF model to use. There are a few to choose from (in the response_functions folder). Here we're using a circular pRF with polar coordinates
+- B0 is the strength of the scanner's magnetic field in teslas. This influences several priors in the observation model.
