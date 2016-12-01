@@ -1,12 +1,24 @@
 # BayespRF
-The BayespRF Toolbox is a framework for specifying and comparing models of population receptive fields (pRFs). It is built in Matlab and depends upon [SPM](http://www.fil.ion.ucl.ac.uk/spm/).
+The BayespRF Toolbox is a framework for specifying and comparing models of population receptive fields (pRFs). Models are probabilistic and are estimated using the variational Bayes algorithm. The toolbox is built in Matlab and depends upon [SPM](http://www.fil.ion.ucl.ac.uk/spm/).
+
+Advantages:
+
+- Neural and neuro-vascular / BOLD parameters are estimated on a per-voxel (or region of interest) basis
+- Models for any stimulus dimensionality and with any number of parameters can be estimated
+- The uncertainty (variance) of parameters is estimated as well as the covariance among parameters
+- Models expressing competing hypotheses can be compared based on their evidence (using the free energy approximation).
+
+Disadvantages:
+
+- Model estimation is relatively expensive (~100 seconds per voxel per CPU core)
+- Cortical surface projection is not yet implemented
 
 ## Installing
 1. Copy the 'toolbox' folder to a location on your computer of your choice.
 2. Add the 'toolbox' folder to your Matlab path with subfolders.
 
 ## Running the example dataset
-A good way to get started is to try fitting a pRF model using an example dataset. The toolbox includes a folder called **example_3T** which contains the necessary scripts to automatically download and analyse the example dataset supplied with the [SamSrf](https://figshare.com/articles/SamSrf_toolbox_for_pRF_mapping/1344765) toolbox.
+A good way to get started is to try fitting a pRF model using an example dataset. The toolbox includes a folder called **example_3T** which contains the necessary scripts to automatically download and analyse the example dataset. The dataset is a single subject scanned with 3T fMRI, kindly shared online by the [SamSrf](https://figshare.com/articles/SamSrf_toolbox_for_pRF_mapping/1344765) toolbox.
 
 **Part 1: Downloading the data, extracting timeseries**
 
