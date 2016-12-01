@@ -85,7 +85,7 @@ if ~exist(glm_dir,'file')
     mkdir(glm_dir);
 end
 
-load('first_level_binned_batch.mat');
+load('first_level_batch.mat');
 
 % Session-specific options
 for i = 1:nsess
@@ -136,7 +136,7 @@ spm_write_vol(V,Y);
 
 %% Extract timeseries
 cd(start_dir);
-load('extract_timeseries_binned_batch.mat');
+load('extract_timeseries_batch.mat');
 matlabbatch{1}.spm.util.voi.spmmat = cellstr(fullfile(glm_dir,'SPM.mat'));
 matlabbatch{1}.spm.util.voi.roi{1}.mask.image = ...
     cellstr(fullfile(glm_dir,'spmF_0001_mask_uncorrected.nii'));
