@@ -136,3 +136,12 @@ The toolbox provides a set of functions for specifying and analysing pRF models:
 | spm_pfx_gx | BOLD signal model |
 | spm_prf_review | Reviews the results of pRF estimation |
 
+A pRF model is defined by a response function - for example, a Gaussian response or Difference of Gaussians (DoG) response. pRF models are provided in the **toolbox/response_functions** folder. The name of the function to use should be provided when specifying the pRF (in **spm_prf_analyse**. The functions included with the toolbox are:
+
+| Function | Description | Input coordinates |
+| spm_prf_fcn_gaussian_1sigma_DCP2 | Isotropic 2D Gaussian | Polar |
+| spm_prf_fcn_gaussian_1sigma_ellipse_DCP2 | Elliptical 2D Gaussian | Polar |
+| spm_prf_fcn_gaussian_1sigma_angled_DCP2 | Elliptical 2D Gaussian with rotation | Polar |
+| spm_prf_fcn_gaussian_DoG_basic_DCP2 | Isotropic 2D DoG | Polar |
+| spm_prf_fcn_gaussian_DoG_ellipse_DCP2 | Elliptical 2D DoG | Polar |
+| spm_prf_fcn_gaussian_DoG_DCP2 | Elliptical 2D DoG with rotation | Polar |
