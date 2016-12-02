@@ -1,4 +1,4 @@
-# BayespRF
+# BayespRF Toolbox
 The BayespRF Toolbox is a framework for specifying and comparing models of population receptive fields (pRFs). Models are probabilistic and are estimated using the variational Bayes algorithm. The toolbox is built in Matlab and depends upon [SPM](http://www.fil.ion.ucl.ac.uk/spm/).
 
 Advantages:
