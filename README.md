@@ -161,7 +161,7 @@ Let's go through each part of the figure:
 
 **Prior**: This is the response of the pRF model to each (x,y) stimulus coordinate, with the model's parameters fixed at their prior expectations. The model uses polar coordinates, with prior expectations set half way through their allowed range. Thus the prior polar distance is half way from the centre to the periphery, and the polar angle is half way from -pi to pi radians (pointing to the right). For the polar models, this plot is not very informative and can generally be ignored, as the uncertainty about the parameters shifts the peak of the response, as seen in the next plot.
 
-**Prior Predictive Density (PD)** This is the prior response of the pRF model *taking into account uncertainty about the parameters*. The non-linear transforms in the model (detailed in the methods section of the paper) cause the prior to be centred on the middle of the stimulus display (the fovea).
+**Prior Predictive Density (PD)** This is the prior response of the pRF model *taking into account uncertainty about the parameters*. This is done by averaging the response of the model to each (x,y) coordinate with 1000 different sets of parameters, sampled from the priors. The non-linear transforms in the model (detailed in the methods section of the paper) cause the prior to be centred on the middle of the stimulus display (the fovea).
 
 **Posterior**: This is the response of the model with parameters estimated from the data. The response is centred on the lower right of the stimulated area.
 
