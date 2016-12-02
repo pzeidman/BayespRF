@@ -350,7 +350,7 @@ xlabel('Time (secs)'); ylabel('BOLD');
 
 % List X,Y stimulus coordinates
 pmax = PRF.M.pmax;
-x_bins = -(pmax/2):(pmax/2);
+x_bins = -(pmax/2):0.1:(pmax/2);
 y_bins = x_bins;
 b      = length(x_bins);
 [x2,y2] = meshgrid(x_bins,y_bins);
@@ -365,6 +365,7 @@ axes(handles.prf_axes);
 cla;
 h = imagesc(z_post);
 axis square;
+colormap jet;
 colorbar;
 if ~isempty(mask), set(h,'AlphaData',mask); end
 title('PRF','FontSize',16);
@@ -385,6 +386,7 @@ if options.disp_ppd
     h = imagesc(pd);
     title('PRF with uncertainty','FontSize',16);
     axis square;
+    colormap jet;
     colorbar;
     if ~isempty(mask), set(h,'AlphaData',mask); end
     set(gca,'YDir','normal','XTick',1:10:b,'YTick',1:10:b);

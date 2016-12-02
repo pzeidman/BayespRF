@@ -1,9 +1,16 @@
 function U = prepare_inputs_polar_samsrf(ApFrm,TR)
-% Returns coordinates of pixels of the screen stimulated at each time point
+% Produces the input structure needed for spm_prf_analyse() given a 3D
+% stimuli matrix with dimensions [x,y,t].
 %
-% P           - [x,y,t] matrix
+% Inputs:
+%
+% ApFrm       - [x,y,t] binary matrix indiciating which pixel locations
+%               were illuminated at each time point t
 % TR          - Scanner repetition time (TR)
-% num_session - Which session to use
+%
+% Returns:
+%
+% U           - Input structure to feed to spm_prf_analyse.m
 
 % Settings
 nmicrotime    = 16;     % Bins per TR
