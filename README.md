@@ -153,5 +153,10 @@ prf_file = fullfile(glm_dir,'PRF_SamSrf_example.mat');
 
 spm_prf_review(prf_file, 3439);
 ```
-Here we ask it to review only the voxel we have estimated (3439). If we don't give this parameter, and if the pRF file contains multiple voxels, then spm_prf_review will attempt to build a parameteric map of the voxels across the brain.
+Here we ask it to review only the voxel we have estimated (3439). (If we don't give this parameter, and if the pRF file contains multiple voxels, then spm_prf_review will attempt to build a parameteric map of the voxels across the brain.) You should see a window like the following:
 
+![pRF review window](https://cloud.githubusercontent.com/assets/2145293/20844452/c519ef06-b8b7-11e6-85c9-cd12d8459077.png)
+
+Let's go through each part of the figure:
+
+Top-left: The response of the pRF model to each (x,y) stimulus coordinate with parameters fixed at their priors. Polar coordinates are used, with prior expectations half way through the allowed range of coordinates. Thus the prior polar distance as half way from the centre to the periphery, and the polar angle is half way from 0
