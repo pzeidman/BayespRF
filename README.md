@@ -134,7 +134,7 @@ The toolbox provides a set of functions for specifying and analysing pRF models:
 | spm_prf_get_ppd | Gets the prior and posterior predictive density for a pRF model |
 | spm_prf_review | Reviews the results of pRF estimation |
 
-A pRF model is defined by a response function - for example, a Gaussian response or Difference of Gaussians (DoG) response. pRF models are provided in the **toolbox/response_functions** folder. The name of the function to use should be provided when specifying the pRF (in **spm_prf_analyse**. The functions included with the toolbox are:
+A pRF model is defined by a response function - for example, a Gaussian response or Difference of Gaussians (DoG) response. pRF models are provided in the **toolbox/response_functions** folder. The name of the function to use should be provided when specifying the pRF in **spm_prf_analyse**. The response functions included with the toolbox are:
 
 | Function | Description | Input coordinates |
 | -------  | ----------- | ----------------- |
@@ -145,4 +145,4 @@ A pRF model is defined by a response function - for example, a Gaussian response
 | spm_prf_fcn_gaussian_DoG_ellipse_DCP2 | Elliptical 2D DoG | Polar |
 | spm_prf_fcn_gaussian_DoG_DCP2 | Elliptical 2D DoG with rotation | Polar |
 
-The neurovascular signal model (spm_prf_fx.m) and the BOLD signal model (spm_prf_gx.m) do not need to be modified on a study-by-study basis.
+The neurovascular signal model (**spm_prf_fx.m**) and the BOLD signal model (**spm_prf_gx.m**) do not need to be modified on a study-by-study basis.
