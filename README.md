@@ -33,6 +33,36 @@ A good way to get started is to try fitting a pRF model using an example dataset
 1. Edit the **example_3T/scripts/Run_pRF_analysis** script. Change the **data_root_dir** variable to match the location containing the example dataset.
 2. Run the Run_pRF_analysis script. A pRF model will be specified covering 6669 voxels. A single pRF will then be estimated (index 3439) and a window will be displayed with the results.
 
+A step-by-step walkthrough of the demo can be found below.
+
+## What's in the toolbox
+
+The toolbox provides a set of functions for specifying and analysing pRF models:
+
+| Function | Description |
+| -------- | ----------- |
+| spm_prf_analyse | Creates and estimates pRF models. |
+| spm_prf_bpa_within_subject | Performs Bayeian Parameter Averaging (BPA) at the within-subject level |
+| spm_prf_editor | A graphical editor for adjusting priors in pRF models |
+| spm_prf_find_voxel | Gets the index of a voxel within a pRF based on its mm coordinates |
+| spm_prf_get_ppd | Gets the prior and posterior predictive density for a pRF model |
+| spm_prf_review | Reviews the results of pRF estimation |
+
+A pRF model is defined by a response function - for example, a Gaussian response or Difference of Gaussians (DoG) response. pRF models are provided in the **toolbox/response_functions** folder. The name of the function to use should be provided when specifying the pRF in **spm_prf_analyse**.
+
+### Response functions
+
+| | Function | Description | Input coordinates |
+| --- | -------  | ----------- | ----------------- |
+| ![Gaussian](https://cloud.githubusercontent.com/assets/2145293/20843434/41822ca2-b8b3-11e6-8ccc-e473dffb648f.png) | spm_prf_fcn_gaussian_1sigma_DCP2 | Isotropic 2D Gaussian | Polar |
+| ![Ellipitical Gaussian](https://cloud.githubusercontent.com/assets/2145293/20843432/4181f37c-b8b3-11e6-8438-ee4346e23bea.png) | spm_prf_fcn_gaussian_1sigma_ellipse_DCP2 | Elliptical 2D Gaussian | Polar |
+| ![Rotated Gaussian](https://cloud.githubusercontent.com/assets/2145293/20843433/4181f872-b8b3-11e6-94e1-7175f5d44a27.png) | spm_prf_fcn_gaussian_1sigma_angled_DCP2 | Elliptical 2D Gaussian with rotation | Polar |
+| ![DoG](https://cloud.githubusercontent.com/assets/2145293/20843436/4182ab0a-b8b3-11e6-818a-94d2dfd45fe9.png) | spm_prf_fcn_gaussian_DoG_basic_DCP2 | Isotropic 2D DoG | Polar |
+| ![Ellipitical DoG](https://cloud.githubusercontent.com/assets/2145293/20843437/418757c2-b8b3-11e6-9975-9dba3c6284be.png) | spm_prf_fcn_gaussian_DoG_ellipse_DCP2 | Elliptical 2D DoG | Polar |
+| ![Rotated DoG](https://cloud.githubusercontent.com/assets/2145293/20843438/4192a348-b8b3-11e6-80ac-06745b46a49b.png) | spm_prf_fcn_gaussian_DoG_DCP2 | Elliptical 2D DoG with rotation | Polar |
+
+The neurovascular signal model (**spm_prf_fx.m**) and the BOLD signal model (**spm_prf_gx.m**) do not need to be modified on a study-by-study basis.
+
 ## Step by Step
 
 Here's a step by step guide to running a pRF analysis. We'll be working through the steps in the example script supplied with the toolbox (scripts/Run_pRF_analysis.m).
@@ -121,28 +151,3 @@ spm_prf_review(prf_file, 3439);
 ```
 Here we ask it to review only the voxel we have estimated (3439). If we don't give this parameter, and if the pRF file contains multiple voxels, then spm_prf_review will attempt to build a parameteric map of the voxels across the brain.
 
-## Code structure
-
-The toolbox provides a set of functions for specifying and analysing pRF models:
-
-| Function | Description |
-| -------- | ----------- |
-| spm_prf_analyse | Creates and estimates pRF models. |
-| spm_prf_bpa_within_subject | Performs Bayeian Parameter Averaging (BPA) at the within-subject level |
-| spm_prf_editor | A graphical editor for adjusting priors in pRF models |
-| spm_prf_find_voxel | Gets the index of a voxel within a pRF based on its mm coordinates |
-| spm_prf_get_ppd | Gets the prior and posterior predictive density for a pRF model |
-| spm_prf_review | Reviews the results of pRF estimation |
-
-A pRF model is defined by a response function - for example, a Gaussian response or Difference of Gaussians (DoG) response. pRF models are provided in the **toolbox/response_functions** folder. The name of the function to use should be provided when specifying the pRF in **spm_prf_analyse**. The response functions included with the toolbox are:
-
-| Function | Description | Input coordinates |
-| -------  | ----------- | ----------------- |
-| spm_prf_fcn_gaussian_1sigma_DCP2 | Isotropic 2D Gaussian | Polar |
-| spm_prf_fcn_gaussian_1sigma_ellipse_DCP2 | Elliptical 2D Gaussian | Polar |
-| spm_prf_fcn_gaussian_1sigma_angled_DCP2 | Elliptical 2D Gaussian with rotation | Polar |
-| spm_prf_fcn_gaussian_DoG_basic_DCP2 | Isotropic 2D DoG | Polar |
-| spm_prf_fcn_gaussian_DoG_ellipse_DCP2 | Elliptical 2D DoG | Polar |
-| spm_prf_fcn_gaussian_DoG_DCP2 | Elliptical 2D DoG with rotation | Polar |
-
-The neurovascular signal model (**spm_prf_fx.m**) and the BOLD signal model (**spm_prf_gx.m**) do not need to be modified on a study-by-study basis.
