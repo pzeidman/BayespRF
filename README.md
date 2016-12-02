@@ -15,6 +15,13 @@ Disadvantages:
 
 *The toolbox is very new and still in development. So please enjoy using it, but treat results with caution*
 
+| Contents |
+| -------- |
+| [Installing](#installing) |
+| [Running the example dataset](#running-the-example-dataset-retinotopic-mapping) |
+| [What's in the toolbox](#whats-in-the-toolbox) |
+| [Step by Step example](#step-by-step) |
+
 ## Installing
 1. Copy the 'toolbox' folder to a location on your computer of your choice.
 2. Add the 'toolbox' folder to your Matlab path with subfolders.
