@@ -113,7 +113,7 @@ for t = 1:n
 end
 
 if nargout > 1
-    % Integrate BOLD model
+    % Integrate BOLD model (calls spm_prf_fx and spm_prf_gx)
     Z.u=z';
     Z.dt=M.dt;
     y=spm_int(P,M,Z);
