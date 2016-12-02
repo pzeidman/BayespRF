@@ -159,4 +159,14 @@ Here we ask it to review only the voxel we have estimated (3439). (If we don't g
 
 Let's go through each part of the figure:
 
-Top-left: The response of the pRF model to each (x,y) stimulus coordinate with parameters fixed at their priors. Polar coordinates are used, with prior expectations half way through the allowed range of coordinates. Thus the prior polar distance as half way from the centre to the periphery, and the polar angle is half way from 0
+**Prior**: This is the response of the pRF model to each (x,y) stimulus coordinate, with the model's parameters fixed at their prior expectations. The model uses polar coordinates, with prior expectations set half way through their allowed range. Thus the prior polar distance is half way from the centre to the periphery, and the polar angle is half way from -pi to pi radians. For the polar models, this plot is not very informative and can generally be ignored, as can be seen from the next plot...
+
+**Prior Predictive Density** This is the prior response of the pRF model *taking into account uncertainty about the parameters*. The various transforms in the models (detailed in the methods section of the paper) mean that the prior is centred on the fovea.
+
+**Posterior**: This is the response of the model with parameters estimated from the data. It's a reasonably punctate response in the lower right receptive field.
+
+**Posterior Predictive Density**: This is the response of the model with parameters estimated from the data *taking into account uncertainty about the parameters*. Almost all of the uncertainty visible as speckles in the prior PD have been explained away by the data.
+
+**Parameters**: The prior (grey) and posterior (black) parameters of the model. These are not necassery Gaussian, due to the transforms applied to the parameters (see the paper for details). The dots indicate the median and the vertical bars indicate the inter-quartile range.
+
+**Outputs**: The modelled signal (red) and data (grey).
