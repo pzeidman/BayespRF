@@ -177,3 +177,5 @@ Let's go through each part of the figure:
 **Parameters**: The prior (grey) and posterior (black) parameters of the model. These are not necassery Gaussian, due to the transforms applied to the parameters (see the paper for details). The dots indicate the median and the vertical bars indicate the inter-quartile range.
 
 **Outputs**: The modelled signal (red) and data (grey).
+
+For simplicity, you may wish to use the Prior PD and Posterior PD to illustrate the model's parameters in a paper, together with the explained variance, in order to confirm that an interesting amount of variance has been explained. Note that the explained variance must not be used to compare models, as it does not take into account the model's complexity.
