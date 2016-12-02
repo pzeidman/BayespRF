@@ -19,7 +19,7 @@ Disadvantages:
 1. Copy the 'toolbox' folder to a location on your computer of your choice.
 2. Add the 'toolbox' folder to your Matlab path with subfolders.
 
-## Running the example dataset
+## Running the example dataset (retinotopic mapping)
 A good way to get started is to try fitting a pRF model using an example dataset. The toolbox includes a folder called **example_3T** which contains the necessary scripts to automatically download and analyse the example dataset. The dataset is a single subject scanned with 3T fMRI, kindly shared online by the [SamSrf](https://figshare.com/articles/SamSrf_toolbox_for_pRF_mapping/1344765) toolbox.
 
 **Part 1: Downloading the data, extracting timeseries**
@@ -119,7 +119,7 @@ prf_file = fullfile(glm_dir,'PRF_SamSrf_example.mat');
 
 spm_prf_review(prf_file, 3439);
 ```
-Here we ask it to review only the voxel we have estimated (3439). If we don't give this praameter, and if the pRF file contains multiple voxel, then spm_prf_review will attempt to build a parameteric map of the voxels across the brain.
+Here we ask it to review only the voxel we have estimated (3439). If we don't give this parameter, and if the pRF file contains multiple voxels, then spm_prf_review will attempt to build a parameteric map of the voxels across the brain.
 
 ## Code structure
 
