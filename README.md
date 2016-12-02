@@ -120,3 +120,19 @@ prf_file = fullfile(glm_dir,'PRF_SamSrf_example.mat');
 spm_prf_review(prf_file, 3439);
 ```
 Here we ask it to review only the voxel we have estimated (3439). If we don't give this praameter, and if the pRF file contains multiple voxel, then spm_prf_review will attempt to build a parameteric map of the voxels across the brain.
+
+## Code structure
+
+The toolbox provides a set of functions for specifying and analysing pRF models:
+
+| Function | Description |
+| -------- | ----------- |
+| spm_prf_analyse | Creates and estimates pRF models. |
+| spm_prf_bpa_within_subject | Performs Bayeian Parameter Averaging (BPA) at the within-subject level |
+| spm_prf_editor | A graphical editor for adjusting priors in pRF models |
+| spm_prf_find_voxel | Gets the index of a voxel within a pRF based on its mm coordinates |
+| spm_prf_fx | Neurovascular coupling model |
+| spm_prf_get_ppd | Gets the prior and posterior predictive density for a pRF model |
+| spm_pfx_gx | BOLD signal model |
+| spm_prf_review | Reviews the results of pRF estimation |
+
