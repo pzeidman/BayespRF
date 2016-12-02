@@ -69,7 +69,7 @@ Here's a step by step guide to running a pRF analysis. We'll be working through 
 
 **1. Prepare your inputs**
 
-You need to give BayespRF the timing of your experimental stimuli - in other words, which pixels of the stimuli were illuminated at which time points. For the polar coordinates model used in this example, this will be a Matlab structure as follows:
+You need to give BayespRF the timing of your experimental stimuli - in other words, which pixels of the stimuli were illuminated at which time points. For the polar coordinates model used in this example, this will be a Matlab structure with the following fields:
 
 ```Matlab
     U(t).dist  = dist;         % Distance
@@ -81,14 +81,18 @@ You need to give BayespRF the timing of your experimental stimuli - in other wor
     U(t).pmin = 0.5;           % Minimum PRF size
 ```
 
-The structure U will have one entry per time point (t) of the stimulus. E.g. if a bar crosses the display in 20 steps, and this happens 100 times, there will be 2000 entries in U. The U structure contains fields which describe the stimulus at time t:
+The structure U will have one entry per time point (t) of the stimulus. Time points are indexed from 1. For example, if a bar crosses the display in 20 steps, and this happens 100 times, there will be 2000 entries in U. 
+
+The U structure contains fields which describe the stimulus at time t:
 - **Dist** and **angle** are vectors of the polar coordinates illuminated at this time step. 
 - **Ons** and **dur** specify the onset and duration of this stimulus in seconds. Here we've set this to assume one frame of the stimulus per TR (the time taken to acquire an MRI volume), but this need not be the case.
-- Modelling is conducted at a finer timescale than MRI acquisitions. Each stimulus time step will be divided into short 'microtime' bins. **dt** is the length of each bin in seconds (typically nmicrotime=16).
+- **dt** is the length of each microtime bin in seconds (typically nmicrotime=16). Modelling is conducted at a finer timescale than MRI acquisitions. Each stimulus time step will be divided into short 'microtime' bins of length dt seconds.
 - **pmax** is the stimulus diameter in degrees of visual angle
 - **pmin** is the minimum entertained pRF size in degrees of visual angle
 
-*Note: The model has been tested with a stimulus resolution downsampled to a [41 x 41] grid. We recommend you do the same. See the example in scripts/prepare_inputs_polar_samsrf.m*
+**Note \#1:** You will find an example script for producing this U structure in **scripts/prepare_inputs_polar_samsrf.m** . This reads in the stimuli as a 3D matrix of stimuli, where the third dimension indexes time, and produces the U structure.  
+
+**Note \#2:** The pRF models have been tested with the resolution of the stimuli downsampled to a [41 x 41] grid. We recommend you do the same with your stimuli. This is done for you in the example script.
 
 **2. Prepare your timeseries**
 
