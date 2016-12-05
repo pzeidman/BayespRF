@@ -13,7 +13,7 @@ Disadvantages:
 - Model estimation is computationally expensive (~100 seconds per voxel per CPU core)
 - Cortical surface projection is not yet implemented
 
-*The toolbox is very new and still in development. So please enjoy using it, but treat results with caution*
+*The toolbox is very new and still in development. So please enjoy using it, but treat results with caution. The corresponding paper is out in [Preprint](https://arxiv.org/abs/1612.00644) and will soon be going to peer review.*
 
 | Contents |
 | -------- |
@@ -21,6 +21,7 @@ Disadvantages:
 | [Running the example dataset](#running-the-example-dataset-retinotopic-mapping) |
 | [What's in the toolbox](#whats-in-the-toolbox) |
 | [Step by Step example](#step-by-step) |
+| [Developing neuronal response functions](#developing-neuronal-response-functions) |
 
 ## Installing
 1. Copy the 'toolbox' folder to a location on your computer of your choice.
@@ -42,6 +43,8 @@ A good way to get started is to try fitting a pRF model using an example dataset
 
 A step-by-step walkthrough of the demo can be found below.
 
+[Top of page](#bayesprf-toolbox)
+
 ## What's in the toolbox
 
 The toolbox provides a set of functions for specifying and analysing pRF models:
@@ -57,6 +60,8 @@ The toolbox provides a set of functions for specifying and analysing pRF models:
 
 A pRF model is defined by a response function - for example, a Gaussian response or Difference of Gaussians (DoG) response. pRF models are provided in the **toolbox/response_functions** folder. The name of the function to use should be provided when specifying the pRF in **spm_prf_analyse**.
 
+[Top of page](#bayesprf-toolbox)
+
 ### Response functions
 
 | | Function | Description | Input coordinates |
@@ -69,6 +74,8 @@ A pRF model is defined by a response function - for example, a Gaussian response
 | ![Rotated DoG](https://cloud.githubusercontent.com/assets/2145293/20843438/4192a348-b8b3-11e6-80ac-06745b46a49b.png) | spm_prf_fcn_gaussian_DoG_DCP2 | Elliptical 2D DoG with rotation | Polar |
 
 The neurovascular signal model (**spm_prf_fx.m**) and the BOLD signal model (**spm_prf_gx.m**) do not need to be modified on a study-by-study basis.
+
+[Top of page](#bayesprf-toolbox)
 
 ## Step by Step
 
@@ -179,3 +186,15 @@ Let's go through each part of the figure:
 **Outputs**: The modelled signal (red) and data (grey).
 
 For simplicity, you may wish to use the Prior PD and Posterior PD to illustrate the model's parameters in a paper, together with the explained variance, in order to confirm that an interesting amount of variance has been explained. Note that the explained variance must not be used to compare models, as it does not take into account the model's complexity.
+
+[Top of page](#bayesprf-toolbox)
+
+## Developing neuronal response functions
+
+The toolbox is supplied with example response functions for use with retinotopic mapping. However, the approach is generic and you can develop models for any kind of stimuli. 
+
+The file **response_functions/spm_prf_fcn_template.m** is a good starting point for developing your own neuronal response function.The example simply models neuronal activity as a scaled version of the input: Z(t) = alpha * u(t) where experimental stimulation u(t) is either on (1) or off (2). You can run this simple demo on data from the visual pRF example, using the script **run_developer_demo_analysis**. 
+
+To create your own function, copy **response_functions/spm_prf_fcn_template.m** and give it a new name. Customise the response function and run it using example code from **run_developer_demo_analysis** .
+
+[Top of page](#bayesprf-toolbox)
