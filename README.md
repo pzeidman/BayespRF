@@ -24,8 +24,9 @@ Disadvantages:
 | [Developing neuronal response functions](#developing-neuronal-response-functions) |
 
 ## Installing
-1. Copy the 'toolbox' folder to a location on your computer of your choice.
-2. Add the 'toolbox' folder to your Matlab path with subfolders.
+1. Download the BayespRF toolbox. You can clone this repository or [download the latest release .zip file](https://github.com/pzeidman/BayespRF/releases).
+2. Copy the 'toolbox' folder to a location on your computer of your choice.
+3. Add the 'toolbox' folder to your Matlab path with subfolders.
 
 ## Running the example dataset (retinotopic mapping)
 A good way to get started is to try fitting a pRF model using an example dataset. The toolbox includes a folder called **example_3T** which contains the necessary scripts to automatically download and analyse the example dataset. The dataset is a single subject scanned with 3T fMRI, kindly shared online by the [SamSrf](https://figshare.com/articles/SamSrf_toolbox_for_pRF_mapping/1344765) toolbox.
