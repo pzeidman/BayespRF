@@ -193,8 +193,8 @@ For simplicity, you may wish to use the Prior PD and Posterior PD to illustrate 
 
 The toolbox is supplied with example response functions for use with retinotopic mapping. However, the approach is generic and you can develop models for any kind of stimuli. 
 
-The file **response_functions/spm_prf_fcn_template.m** is a good starting point for developing your own neuronal response function.The example simply models neuronal activity as a scaled version of the input: Z(t) = alpha * u(t) where experimental stimulation u(t) is either on (1) or off (2). You can run this simple demo on data from the visual pRF example, using the script **run_developer_demo_analysis**. 
+The Matlab file **response_functions/spm_prf_fcn_template.m** is a good starting point for developing your own neuronal response function. This example simply models neuronal activity z as a scaled version of the input: z(t) = alpha * u(t), where t is time and experimental stimulation u(t) is either on (1) or off (2). You can run this simple demo on data from the visual pRF example, using the script **run_developer_demo_analysis**. 
 
-To create your own function, copy **response_functions/spm_prf_fcn_template.m** and give it a new name. Customise the response function and run it using example code from **run_developer_demo_analysis** .
+To create your own function, copy **response_functions/spm_prf_fcn_template.m** and give it a new name. Customise the response function as desired and run it using example code from **run_developer_demo_analysis** .
 
 [Top of page](#bayesprf-toolbox)
