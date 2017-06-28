@@ -10,10 +10,9 @@ Advantages:
 
 Disadvantages:
 
-- Model estimation is computationally expensive (~100 seconds per voxel per CPU core)
-- Cortical surface projection is not yet implemented
+- Model estimation is computationally expensive (> 100 seconds per voxel per CPU core)
 
-*The toolbox is very new and still in development. So please enjoy using it, but treat results with caution. The corresponding paper is out in [Preprint](https://arxiv.org/abs/1612.00644) and will soon be going to peer review.*
+*The toolbox is very new and still in development. So please enjoy using it, but treat results with caution. The corresponding paper is out in [Preprint](https://arxiv.org/abs/1612.00644) and is undergoing peer review.*
 
 | Contents |
 | -------- |
@@ -40,7 +39,7 @@ A good way to get started is to try fitting a pRF model using an example dataset
 **Part 2: Running the pRF analysis**
 
 1. Edit the **example_3T/scripts/Run_pRF_analysis** script. Change the **data_root_dir** variable to match the location containing the example dataset.
-2. Run the Run_pRF_analysis script. A pRF model will be specified covering 6669 voxels. A single pRF will then be estimated (index 3439) and a window will be displayed with the results.
+2. Run the Run_pRF_analysis script. A pRF model will be specified covering 2422 voxels. A single pRF will then be estimated (index 1) and a window will be displayed with the results. You can stop the code there, or you can continue with estimating all voxels.
 
 A step-by-step walkthrough of the demo can be found below.
 
@@ -57,7 +56,11 @@ The toolbox provides a set of functions for specifying and analysing pRF models:
 | spm_prf_editor | A graphical editor for adjusting priors in pRF models |
 | spm_prf_find_voxel | Gets the index of a voxel within a pRF based on its mm coordinates |
 | spm_prf_get_ppd | Gets the prior and posterior predictive density for a pRF model |
+| spm_prf_import_label | Imports a Freesurfer label for use with this toolbox |
+| spm_prf_import_surface | Imports a Freesurfer surface for use with this toolbox |
+| spm_prf_plot_entropy | Plots the negative entropy (certainty) of the parameters |
 | spm_prf_review | Reviews the results of pRF estimation |
+| spm_prf_summarise | Plots the summed / average pRF response within an ROI |
 
 A pRF model is defined by a response function - for example, a Gaussian response or Difference of Gaussians (DoG) response. pRF models are provided in the **toolbox/response_functions** folder. The name of the function to use should be provided when specifying the pRF in **spm_prf_analyse**.
 
@@ -67,14 +70,14 @@ A pRF model is defined by a response function - for example, a Gaussian response
 
 | | Function | Description | Input coordinates |
 | --- | -------  | ----------- | ----------------- |
-| ![Gaussian](https://cloud.githubusercontent.com/assets/2145293/20843434/41822ca2-b8b3-11e6-8ccc-e473dffb648f.png) | spm_prf_fcn_gaussian_1sigma_DCP2 | Isotropic 2D Gaussian | Polar |
-| ![Ellipitical Gaussian](https://cloud.githubusercontent.com/assets/2145293/20843432/4181f37c-b8b3-11e6-8438-ee4346e23bea.png) | spm_prf_fcn_gaussian_1sigma_ellipse_DCP2 | Elliptical 2D Gaussian | Polar |
-| ![Rotated Gaussian](https://cloud.githubusercontent.com/assets/2145293/20843433/4181f872-b8b3-11e6-94e1-7175f5d44a27.png) | spm_prf_fcn_gaussian_1sigma_angled_DCP2 | Elliptical 2D Gaussian with rotation | Polar |
-| ![DoG](https://cloud.githubusercontent.com/assets/2145293/20843436/4182ab0a-b8b3-11e6-818a-94d2dfd45fe9.png) | spm_prf_fcn_gaussian_DoG_basic_DCP2 | Isotropic 2D DoG | Polar |
-| ![Ellipitical DoG](https://cloud.githubusercontent.com/assets/2145293/20843437/418757c2-b8b3-11e6-9975-9dba3c6284be.png) | spm_prf_fcn_gaussian_DoG_ellipse_DCP2 | Elliptical 2D DoG | Polar |
-| ![Rotated DoG](https://cloud.githubusercontent.com/assets/2145293/20843438/4192a348-b8b3-11e6-80ac-06745b46a49b.png) | spm_prf_fcn_gaussian_DoG_DCP2 | Elliptical 2D DoG with rotation | Polar |
+| ![Gaussian](https://cloud.githubusercontent.com/assets/2145293/20843434/41822ca2-b8b3-11e6-8ccc-e473dffb648f.png) | spm_prf_fcn_gaussian_polar | Isotropic 2D Gaussian | Polar |
+| ![Ellipitical Gaussian](https://cloud.githubusercontent.com/assets/2145293/20843432/4181f37c-b8b3-11e6-8438-ee4346e23bea.png) | spm_prf_fcn_gaussian_polar_ellipse | Elliptical 2D Gaussian | Polar |
+| ![Rotated Gaussian](https://cloud.githubusercontent.com/assets/2145293/20843433/4181f872-b8b3-11e6-94e1-7175f5d44a27.png) | spm_prf_fcn_gaussian_polar_angled | Elliptical 2D Gaussian with rotation | Polar |
+| ![DoG](https://cloud.githubusercontent.com/assets/2145293/20843436/4182ab0a-b8b3-11e6-818a-94d2dfd45fe9.png) | spm_prf_fcn_DoG_polar | Isotropic 2D DoG | Polar |
+| ![Ellipitical DoG](https://cloud.githubusercontent.com/assets/2145293/20843437/418757c2-b8b3-11e6-9975-9dba3c6284be.png) | spm_prf_fcn_DoG_polar_ellipse | Elliptical 2D DoG | Polar |
+| ![Rotated DoG](https://cloud.githubusercontent.com/assets/2145293/20843438/4192a348-b8b3-11e6-80ac-06745b46a49b.png) | spm_prf_fcn_DoG_polar_angled | Elliptical 2D DoG with rotation | Polar |
 
-The neurovascular signal model (**spm_prf_fx.m**) and the BOLD signal model (**spm_prf_gx.m**) do not need to be modified on a study-by-study basis.
+The neurovascular signal model (**spm_prf_fx.m**) and the BOLD signal model (**spm_prf_gx.m**) do not generally need to be modified on a study-by-study basis.
 
 [Top of page](#bayesprf-toolbox)
 
