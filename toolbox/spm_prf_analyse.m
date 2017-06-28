@@ -57,7 +57,7 @@ function varargout = spm_prf_analyse(mode,varargin)
 %              struct('TE',TE, ...        % echo time
 %                  'voxel_wise',false, ...% per voxel (true) or ROI (false)
 %                  'model', model,...     % pRF function (spm_prf_fcn...)
-%                  'hE',4, ...            % expected log precision of noise
+%                  'hE',6, ...            % expected log precision of noise
 %                  'P',[], ...            % starting parameters
 %                  'B0',3, ...            % fMRI field strength (teslas)
 %                  'avg_sess',true, ...   % average sessions' timeseries
@@ -210,6 +210,10 @@ switch upper(mode)
         
         save_prf(PRF, out_dir);
         varargout{1} = PRF;
+    case 'GET_PARAMETERS'
+        PRF = varargin{1};
+        
+        varargout{1} = get_corrected_parameters(PRF);
     otherwise
         error('Unknown action');
 end
@@ -229,7 +233,7 @@ XYZmm = [];
 
 % Set defaults
 try options.voxel_wise; catch, options.voxel_wise = false; end
-try options.hE;         catch, options.hE = 4; end
+try options.hE;         catch, options.hE = 6; end
 try options.P;          catch, options.P = []; end
 try options.B0;         catch, options.B0 = 3; end
 
@@ -411,6 +415,8 @@ end
 
 M.nograph = est_options.nograph;
 
+P = {};
+
 tic
 if est_options.use_parfor
     % Run with parallel toolbox
@@ -418,13 +424,13 @@ if est_options.use_parfor
         if ny > 1, fprintf('Voxel %d of %d\n', i, ny); end
              
         % Initialize priors
-        [pE{i},pC{i},P] = initialize_model(M,U,Y.y,i,est_options);
+        [pE{i},pC{i},P{i}] = initialize_model(M,U,Y.y,i,est_options);
         
         % Model updated with initialized priors
         M2 = M;
         M2.pE = pE{i};
         M2.pC = pC{i};
-        M2.P  = P;
+        M2.P  = P{i};
         
         % Fit        
         [Ep{i},Cp{i},Eh(i),F(i)] = fit_model(M2,U,Y,i);
@@ -436,13 +442,13 @@ else
         if ny > 1, fprintf('Voxel %d of %d\n', i, ny); end
 
         % Initialize priors
-        [pE{i},pC{i},P] = initialize_model(M,U,Y.y,i,est_options);
+        [pE{i},pC{i},P{i}] = initialize_model(M,U,Y.y,i,est_options);
 
         % Model updated with initialized priors
         M2 = M;
         M2.pE = pE{i};
         M2.pC = pC{i};
-        M2.P  = P;
+        M2.P  = P{i};
                 
         % Fit
         [Ep{i},Cp{i},Eh(i),F(i)] = fit_model(M2,U,Y,i);                           
@@ -786,4 +792,12 @@ PRF.Y.y = PRF0.Y.y(:,vox_idx);
 
 if isfield(PRF0.xY,'XYZmm')
     PRF.xY.XYZmm = PRF0.xY.XYZmm(:,vox_idx);
+end
+% -------------------------------------------------------------------------
+function Ep = get_corrected_parameters(PRF)
+% Returns parameters corrected by converting from latent variables
+
+Ep = cell(1,length(PRF.Ep));
+for v = 1:length(PRF.Ep)
+    Ep{v} = feval(PRF.M.IS, PRF.Ep{v}, PRF.M, PRF.U, 'get_parameters');
 end

@@ -23,6 +23,9 @@ TE = 0.055;     % Echo time
 sess = 1:10;
 num_sess = length(sess);
 
+% The hemisphere to analyse. We'll just do left for now.
+hemi = 'lh';
+
 %% Prepare inputs
 
 % Build a structure containing which stimulus pixels were illuminated at
@@ -34,10 +37,10 @@ U = prepare_inputs_polar_samsrf(ApFrm,TR);
 % cell array of the VOI files for each session.
 xY = cell(1,num_sess);
 for i = 1:num_sess
-    filename = sprintf('VOI_Mask_%d.mat',sess(i));
+    filename = sprintf('VOI_%s_prf_mask_%d.mat',hemi,sess(i));
     xY{i}    = fullfile(glm_dir,filename);
 end
-%% Specify pRF model (all 6669 voxels)
+%% Specify pRF model (all 2422 voxels)
 
 % Load SPM for timing information / image dimensions
 SPM = load(fullfile(glm_dir,'SPM.mat'));
@@ -49,25 +52,61 @@ SPM.swd = glm_dir;
 % Set pRF specification options
 options = struct('TE', TE,...
                  'voxel_wise', true,...
-                 'name', 'SamSrf_example',...
-                 'model', 'spm_prf_fcn_gaussian_1sigma_DCP2',...
+                 'name', [hemi '_SamSrf_example'],...
+                 'model', 'spm_prf_fcn_gaussian_polar',...
                  'B0',3);
              
 % Specify pRF model (.mat file will be stored in the GLM directory)
 PRF = spm_prf_analyse('specify',SPM,xY,U,options);
 
-%% Estimate one voxel (global peak) as an example: idx 3439, [-4,-70,-3] 
+%% Estimate one voxel as an example (voxel 1)
+voxel = 1;
 
 % Model to estimate
-prf_file = fullfile(glm_dir,'PRF_SamSrf_example.mat');
+prf_file = fullfile(glm_dir,['PRF_' hemi '_SamSrf_example.mat']);
 
 % Estimation options
-options  = struct('voxels',3439);
+options  = struct('voxels',voxel);
 
 % Estimate
 PRF_est = spm_prf_analyse('estimate',prf_file,options);
 
-%% Review (single voxel)
-prf_file = fullfile(glm_dir,'PRF_SamSrf_example.mat');
+% Review
+spm_prf_review(prf_file, voxel);
+%% Estimate all voxels (slow)
 
-spm_prf_review(prf_file, 3439);
+% Model to estimate
+prf_file = fullfile(glm_dir,['PRF_' hemi '_SamSrf_example.mat']);
+
+% Estimation options
+options  = struct('use_parfor',true);
+
+% Estimate
+PRF_est = spm_prf_analyse('estimate',prf_file,options);
+
+% Review
+spm_prf_review(prf_file);
+%% Convert the left V1 label to a nifti mask so we can do some ROI analyses
+label_file = fullfile(data_dir, 'lh_V1.label');
+spm_prf_import_label( label_file, glm_dir );
+
+%% Plot the summed pRF response in right V1
+
+% Load estimated pRF file
+prf_file = fullfile(glm_dir,['PRF_' hemi '_SamSrf_example.mat']);
+load(prf_file);
+
+% Load VOI (imported using spm_prf_import_label)
+roi = fullfile(glm_dir, 'lh_V1.nii');
+
+figure('Color','w');
+spm_prf_summarise(PRF,roi);
+title('Right V1','FontSize',16);
+%% Compute a negative entropy map (certainty of the pRF location)
+
+% Load estimated pRF file
+prf_file = fullfile(glm_dir,['PRF_' hemi '_SamSrf_example.mat']);
+load(prf_file);
+
+% Compute and plot
+spm_prf_plot_entropy(PRF,{'dist','angle'},'dist_angle',true);

@@ -31,6 +31,12 @@ function varargout = spm_prf_fcn_template(P,M,U,varargin)
 % P         parameters
 % M,U       model, inputs
 % -------------------------------------------------------------------------
+% FORMAT S = spm_prf_fcn_template(P,M,U,'get_summary')
+% Summarises the pRF with simple (Gaussian) parameters x,y,width,beta
+%
+% S         structure with fields x,y,width,beta
+% M,U       model, inputs
+% -------------------------------------------------------------------------
 % FORMAT tf = spm_prf_fcn_template(P,M,U,'is_above_threshold',Cp,v)
 % Return whether the model with parameters P and covariance Cp passes an
 % arbitrary threshold for display
@@ -108,6 +114,10 @@ else
             % Get the parameters with any corrections needed for 
             % display            
             varargout{1} = P;
+        case 'get_summary'
+            % Get a summary of the pRF shape under Gaussian assumptions
+            varargout{1} = ...
+                struct('x',P.x,'y',P.y,'width',P.width,'beta',P.beta);
         case 'is_above_threshold'
             % Return binary vector identifying whether each voxel is
             % above some threshold for display            

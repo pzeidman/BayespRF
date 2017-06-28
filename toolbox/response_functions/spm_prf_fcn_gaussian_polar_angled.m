@@ -1,4 +1,4 @@
-function varargout = spm_prf_fcn_gaussian_1sigma_DCP2(P,M,U,varargin)
+function varargout = spm_prf_fcn_gaussian_polar_angled(P,M,U,varargin)
 % Gaussian PRF model with polar coordinates with hard constraints
 %
 % D - Degrees of visual angle used as units
@@ -18,6 +18,12 @@ function varargout = spm_prf_fcn_gaussian_1sigma_DCP2(P,M,U,varargin)
 % Return the given parameters corrected for display
 %
 % P         parameters
+% M,U       model, inputs
+% -------------------------------------------------------------------------
+% FORMAT S = spm_prf_fcn_template(P,M,U,'get_summary')
+% Summarises the pRF with simple (Gaussian) parameters x,y,width,beta
+%
+% S         structure with fields x,y,width,beta
 % M,U       model, inputs
 % -------------------------------------------------------------------------
 % FORMAT P = spm_prf_fcn_gaussian(P,M,U,'get_response',xy)
@@ -62,6 +68,17 @@ else
             P.epsilon = exp(P.epsilon);                  
             
             varargout{1} = P;
+        case 'get_summary'
+            % Gets x,y,sigma,beta
+            
+            P = correct_parameters(P,M);
+            
+            x     = P.dist .* cos(P.angle);
+            y     = P.dist .* sin(P.angle);            
+            width = max(P.width_x, P.width_y);
+            beta  = P.beta;
+            
+            varargout{1} = struct('x',x,'y',y,'width',width,'beta',beta);            
         case 'is_above_threshold'
             Cp = varargin{2};
             v  = varargin{3};
@@ -113,7 +130,7 @@ for t = 1:n
 end
 
 if nargout > 1
-    % Integrate BOLD model (calls spm_prf_fx and spm_prf_gx)
+    % Integrate BOLD model
     Z.u=z';
     Z.dt=M.dt;
     y=spm_int(P,M,Z);
@@ -145,8 +162,13 @@ mu_x = P.dist .* cos(P.angle);
 mu_y = P.dist .* sin(P.angle);
 
 % Std dev -> covariance matrix
-sigma = diag( [P.width P.width] );
+sigma = diag( [P.width_x P.width_y] );
 sigma = sigma .* sigma;
+
+% Correlation (angle) centre
+sigma_corr = P.rotation * P.width_x * P.width_y;
+sigma      = sigma + [0 sigma_corr; ...
+                      sigma_corr 0];
 
 % Normalized Gaussian
 x = spm_mvNpdf(xy', [mu_x mu_y], sigma);
@@ -183,8 +205,12 @@ P.angle   = constrain_parameter(P.angle, -pi, pi);
 % Convert log beta -> beta
 P.beta    = exp(P.beta);
 
+% Constrain rotation
+P.rotation  = constrain_parameter(P.rotation,-1,1);
+
 % Scale width (SD) between 0.1 degrees and half stimulus diameter
-P.width = constrain_parameter(P.width, M.pmin, M.pmax / 2);
+P.width_x = constrain_parameter(P.width_x, M.pmin, M.pmax / 2);
+P.width_y = constrain_parameter(P.width_y, M.pmin, M.pmax / 2);
 
 % -------------------------------------------------------------------------
 function tf = is_above_threshold(P,M,Cp,v,alpha)
@@ -207,7 +233,8 @@ rC = spm_vec(pC);
 % Indices of parameters to keep in nested model
 np = length(rE);
 q  = zeros(1,np);
-q(end-3:end) = 1;
+q(end-2:end) = 1; % haemo
+q(5)        =  1; % beta
 
 % Remove others
 rC(q~=1)=0;
@@ -232,15 +259,17 @@ function [pE,pC] = get_priors(M)
 % Get the neuronal priors
 pE.dist    = 0;         pC.dist    = 1;
 pE.angle   = 0;         pC.angle   = 1;
-pE.width   = 0;         pC.width   = 1;
+pE.width_x = 0;         pC.width_x = 1;
+pE.width_y = 0;         pC.width_y = 1;
 pE.beta    = -2;        pC.beta    = 5;
+pE.rotation= 0;         pC.rotation= 1;
 
 % -------------------------------------------------------------------------
 function P = glm_initialize(P,M,U,y)
 
 % Coordinates as latent variable dist / angle
 x     = -2:0.2:2;
-sigma = P.width;
+sigma = P.width_x;
 
 % Candidates for mu
 [dist, angle] = meshgrid(x,x);
@@ -261,7 +290,8 @@ for i = 1:nm
     P2         = P;
     P2.dist    = k(i,1);
     P2.angle   = k(i,2);
-    P2.width   = k(i,3);
+    P2.width_x = k(i,3);
+    P2.width_y = k(i,3);
     P2.beta    = 0;
     
     P2 = correct_parameters(P2,M);

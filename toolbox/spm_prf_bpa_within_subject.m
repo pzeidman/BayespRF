@@ -3,7 +3,7 @@ function [BPA,xY,XYZmm] = spm_prf_bpa_within_subject(PRF,xY,nocond)
 %
 % PRF    - subject's estimated pRF model
 % xY     - Optional ROI definition for performing averaging 
-%          (see spm_regions.m)
+%          (see spm_regions.m) or vector of voxel indices
 % nocond - If true, disables conditional dependencies between parameters
 %
 % Returns:
@@ -30,6 +30,11 @@ function [BPA,xY,XYZmm] = spm_prf_bpa_within_subject(PRF,xY,nocond)
 % along with this program.  If not, see <http://www.gnu.org/licenses/>.   
 % ---------------------------------------------------------------------
 
+if ischar(PRF)
+    PRF = load(PRF);
+    PRF = PRF.PRF;
+end
+
 nvox = length(PRF.Ep);
 
 if nargin < 2
@@ -37,7 +42,18 @@ if nargin < 2
     included_voxels = 1:nvox;
 else
     % Mask
-    [xY, XYZmm, included_voxels] = spm_ROI(xY, PRF.xY.XYZmm);
+    if isnumeric(xY)
+        included_voxels = xY;
+    else
+        if ischar(xY)
+            xY = struct('def','mask','spec',xY);
+        end
+        [xY, XYZmm, included_voxels] = spm_ROI(xY, PRF.xY.XYZmm);
+    end
+end
+
+if nargin < 3
+    nocond = false;
 end
 
 % Extract posteriors and priors

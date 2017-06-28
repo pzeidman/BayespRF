@@ -1,4 +1,4 @@
-function varargout = spm_prf_fcn_gaussian_1sigma_ellipse_DCP2(P,M,U,varargin)
+function varargout = spm_prf_fcn_gaussian_polar_ellipse(P,M,U,varargin)
 % Gaussian PRF model with polar coordinates with hard constraints
 %
 % D - Degrees of visual angle used as units
@@ -18,6 +18,12 @@ function varargout = spm_prf_fcn_gaussian_1sigma_ellipse_DCP2(P,M,U,varargin)
 % Return the given parameters corrected for display
 %
 % P         parameters
+% M,U       model, inputs
+% -------------------------------------------------------------------------
+% FORMAT S = spm_prf_fcn_template(P,M,U,'get_summary')
+% Summarises the pRF with simple (Gaussian) parameters x,y,width,beta
+%
+% S         structure with fields x,y,width,beta
 % M,U       model, inputs
 % -------------------------------------------------------------------------
 % FORMAT P = spm_prf_fcn_gaussian(P,M,U,'get_response',xy)
@@ -62,6 +68,16 @@ else
             P.epsilon = exp(P.epsilon);                  
             
             varargout{1} = P;
+        case 'get_summary'
+            % Gets x,y,sigma,beta            
+            P = correct_parameters(P,M);
+            
+            x     = P.dist .* cos(P.angle);
+            y     = P.dist .* sin(P.angle);            
+            width = max(P.width_x, P.width_y);
+            beta  = P.beta;
+            
+            varargout{1} = struct('x',x,'y',y,'width',width,'beta',beta);                 
         case 'is_above_threshold'
             Cp = varargin{2};
             v  = varargin{3};

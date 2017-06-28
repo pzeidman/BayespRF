@@ -5,6 +5,7 @@
 % Directory into which to download example dataset
 data_root_dir = 'D:\samdata\';
 data_dir      = fullfile(data_root_dir,'example','pRF');
+surf_dir      = fullfile(data_root_dir,'example','surf');
 
 % Directory for creating GLM
 glm_dir  = fullfile(pwd,'../GLM');
@@ -107,7 +108,22 @@ matlabbatch{1}.spm.stats.fmri_spec.timing.RT = TR;
 
 % Run
 spm_jobman('run',matlabbatch);
-%% Build a mask of voxels at p < 0.001
+
+cd(start_dir);
+%% Import cortical surface
+%
+% Creates images: GLM/lh_surface.nii and GLM/rh_surface.nii
+% and .mat files: GLM/lh_Srf.mat and GLM/rh_Srf.mat
+
+% Structural image
+struct = fullfile(data_dir,'T1.nii');
+
+% Left hemisphere
+spm_prf_import_surface(glm_dir, struct, surf_dir, 'lh');
+
+% Right hemisphere
+spm_prf_import_surface(glm_dir, struct, surf_dir, 'rh');
+%% Build a mask of voxels which survive p < 0.001
 clear matlabbatch;
 matlabbatch{1}.spm.stats.results.spmmat = cellstr(fullfile(glm_dir,'SPM.mat'));
 matlabbatch{1}.spm.stats.results.conspec.titlestr = '';
@@ -120,7 +136,7 @@ matlabbatch{1}.spm.stats.results.conspec.mask.none = 1;
 matlabbatch{1}.spm.stats.results.units = 1;
 matlabbatch{1}.spm.stats.results.export{1}.binary.basename = 'mask_uncorrected';
 spm_jobman('run',matlabbatch);
-%% Remove voxels anterior to y = 0
+%% Remove voxels from the mask anterior to y = 0
 cd(glm_dir);
 
 % Read
@@ -134,10 +150,23 @@ i = XYZmm(2,:) > 0;
 Y(i) = 0;
 spm_write_vol(V,Y);
 
-%% Extract timeseries
 cd(start_dir);
+%% Extract timeseries from surface voxels which survive p < 0.001
+
+% Hemisphere (we'll just do left for now)
+hemi = 'lh';
+
+% Identify masks
+spm_F_mask   = fullfile(glm_dir,'spmF_0001_mask_uncorrected.nii');
+surface_mask = fullfile(glm_dir,[hemi '_surface.nii']);
+
+% Prepare batch
 load('extract_timeseries_batch.mat');
+matlabbatch{1}.spm.util.voi.name   = [hemi '_prf_mask'];
 matlabbatch{1}.spm.util.voi.spmmat = cellstr(fullfile(glm_dir,'SPM.mat'));
-matlabbatch{1}.spm.util.voi.roi{1}.mask.image = ...
-    cellstr(fullfile(glm_dir,'spmF_0001_mask_uncorrected.nii'));
+matlabbatch{1}.spm.util.voi.roi{1}.mask.image = cellstr(spm_F_mask);
+matlabbatch{1}.spm.util.voi.roi{2}.mask.image = cellstr(surface_mask);
+matlabbatch{1}.spm.util.voi.expression        = 'i1 & i2';
+
+% Run batch
 spm_jobman('run',matlabbatch);

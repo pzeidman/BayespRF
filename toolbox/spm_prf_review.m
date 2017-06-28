@@ -179,7 +179,7 @@ end
 
 xPRF.xY = xY;
 
-if nargin < 3
+if nargin < 3 || is_model_parameter
     % Overwrite if a mask is given
     force_overwrite = ~isempty(xY);
 
@@ -225,7 +225,7 @@ end
 
 % Add drop-down menu
 spm_figure('GetWin','Graphics');
-h = uicontrol('Style','Popupmenu','Units','normalized', 'Position',[0.1 0.89 0.6 0.1],...
+h = uicontrol('Style','Popupmenu','Units','normalized', 'Position',[0.1 0.89 0.5 0.1],...
     'Tag','spm_image:window');
 
 % Add parameter selector
@@ -245,12 +245,16 @@ end
 
 % Add anatomical button
 uicontrol('Style','PushButton','Units','normalized', ...
-          'Position',[0.72 0.96 0.22 0.03],'String','Anatomical',...
+          'Position',[0.62 0.96 0.15 0.03],'String','Anatomical',...
           'Callback',@choose_anatomical);
+      
+% Add surface button
+uicontrol('Style','PushButton','Units','normalized', ...
+          'Position',[0.8 0.96 0.15 0.03],'String','Surface',...
+          'Callback',@project_surface);
 
 % Colormap
 c = jet();
-%c = circshift(c,16); % Used in the paper's angle map for clarity
 
 % Orthogonal views
 spm_orthviews('Image',bg,[0 0.59 1 0.4]);
@@ -278,6 +282,11 @@ xPRF.ax = ax;
 xPRF.idx = idx;
 xPRF.PRF = PRF;
 xPRF.is_nz_vox = is_nz_vox;
+if is_model_parameter
+    xPRF.sel_map_image = '';
+else
+    xPRF.sel_map_image = fname;
+end
 assignin('base','xPRF',xPRF);
 
 % Add listeners
@@ -347,6 +356,19 @@ assignin('base','xPRF',xPRF);
 
 % Refresh
 spm_prf_review(xPRF.PRF);
+
+% -------------------------------------------------------------------------
+function project_surface(varargin)
+% Callback for projection to the surface button
+
+xPRF = evalin('base','xPRF');
+PRF  = xPRF.PRF;
+pidx = xPRF.param_idx;
+
+% Map image (e.g. model comparison results) if selected
+sel_map_image = xPRF.sel_map_image;
+
+spm_prf_review_surface(PRF,pidx,sel_map_image);
 
 % -------------------------------------------------------------------------
 function review_single_prf(PRF,idx,parent)
