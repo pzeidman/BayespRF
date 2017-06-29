@@ -113,13 +113,13 @@ The U structure contains fields which describe the stimulus at time t:
 **Note \#2:** The pRF models have been tested with the resolution of the stimuli downsampled to a [41 x 41] grid. We recommend you do the same with your stimuli. This is done for you in the example script.
 
 **2. Extract timeseries**
-We will make a 3D image with 1s for voxels which should be included in the pRF analysis and 0s for voxels which should not. For this example, we will select all voxels that meet 3 criteria:
+Make a 3D image with 1s for voxels which should be included in the pRF analysis and 0s for voxels which should not. For this example, we select all voxels that meet 3 criteria:
 
 - Respond more strongly to visual stimuli than baseline periods
 - Are on the cortical surface
 - Are at the back of the brain (posterior to y=0mm)
 
-To do this, run the Matlab script suppled with the script named Run_first_level.m. It does four important things:
+This is done for you when you run the Matlab script suppled with the script named Run_first_level.m. It does four important things:
 
 1. Specifies and estimates a GLM to identify voxels which respond to visual stimuli
 2. Imports the Freesurfer cortical surfaces (created using the Freesurfer recon-all command) into Matlab / nifti format.
@@ -128,7 +128,7 @@ To do this, run the Matlab script suppled with the script named Run_first_level.
 
 The output is a series of files, named VOI_name_run.mat, containing the timeseries for each run.
 
-** 3. Collate the filenames of the extracted timeseries **
+**3. Collate the filenames of the extracted timeseries**
 Create a cell array containing the filenames of each run's timeseries files:
 
 ```Matlab
@@ -139,7 +139,7 @@ for i = 1:num_sess
 end
 ```
 
-We will provide this cell array (xY) to the BayesPrf toolbox. 
+This cell array (xY) will be provided to the BayesPrf toolbox. 
 
 **4. Specify your pRF model**
 
