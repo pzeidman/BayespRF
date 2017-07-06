@@ -97,11 +97,11 @@ prf_file = fullfile(glm_dir,['PRF_' hemi '_SamSrf_example.mat']);
 load(prf_file);
 
 % Load VOI (imported using spm_prf_import_label)
-roi = fullfile(glm_dir, 'lh_V1.nii');
+roi = fullfile(glm_dir, [hemi '_V1.nii']);
 
 figure('Color','w');
 spm_prf_summarise(PRF,roi);
-title('Right V1','FontSize',16);
+title('Region of interest','FontSize',16);
 %% Compute a negative entropy map (certainty of the pRF location)
 
 % Load estimated pRF file
