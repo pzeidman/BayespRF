@@ -165,7 +165,7 @@ For simplicity, you may wish to use the Prior PD and Posterior PD to illustrate 
 **4. Run the model estimation for the whole brain**
 Having established everything is working, run the next section of the example script (**Run_prf_analysis.m**, lines 76-88). This will estimate all voxels (using parallel processing if available). The whole-brain results will then be displayed.
 
-** 5. Perform an ROI analysis **
+**5. Perform an ROI analysis**
 At this stage, you may wish to manually label regions of interest (e.g. V1) and summarise the pRFs within the region. In the example dataset, labels are provided for all the visual fields. To plot the summed pRF in left V1, run the next section of the script (lines 96-104).
 
 ## Developing neuronal response functions
