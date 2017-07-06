@@ -85,9 +85,23 @@ The neurovascular signal model (**spm_prf_fx.m**) and the BOLD signal model (**s
 
 Here's a step by step guide to running a pRF analysis. We'll be working through the steps in the example script supplied with the toolbox (scripts/Run_pRF_analysis.m).
 
-**1. Prepare your inputs**
+**0. Prepare your files**
+If you'd like to use the example scripts without modification, you'll need to arrange your data into a folder (data_dir) containing:
 
-You need to give BayespRF the timing of your experimental stimuli - in other words, which pixels of the stimuli were illuminated at which time points. For the polar coordinates model used in this example, this will be a Matlab structure with the following fields:
+- data_dir\ubf*.nii     (Pre-processed fMRI images for one subject)
+- data_dir\T1.nii       (Structural MRI)
+- data_dir\aps_Bars.mat (Stimuli - a 3D Matlab matrix of size PxPxT for P pixels and T time points)
+
+This is all ready done for you if you're using the example dataset. If your own data has different filenames, that's fine - just go through and update Run_first_level.m with the correct filenames.
+
+If you wish to work with cortical surfaces, you'll need to run Freesurfer on your T1.nii image using the recon-all command. This will produce a folder called surf containing the extracted surfaces. Update the surf_dir variabile in Run_first_level.m (line 8) to tell the script where to find these.
+
+After ensuring that all folder names are correct in Run_first_level.m and Run_pRF_analysis.m, as well as the TR, TE and session numbers, proceed to step 1.
+
+**1. Prepare your inputs**
+You need to give BayespRF the timing of your experimental stimuli - in other words, which pixels of the stimuli were illuminated at which time points. An example script is provided **prepare_polar_inputs_samsrf.m** which reads in the 3D stimulus array (data_dir\Aps_bars.mat) and produces a structure in the correct format for BayesPrf. If you have a simple design with successive stimuli of equal length, you can simply update the prepare_polar_inputs_samsrf.m script with the stimulus duration and stimulus diameter (lines 17-18).
+
+Alternatively, you may wish to customise the stimulus presentation details (i.e. create your own version of prepare_inputs_polar_samsrf.m). This script needs to produce a Matlab structure array with the following fields:
 
 ```Matlab
     U(t).dist  = dist;         % Distance
@@ -108,9 +122,7 @@ The U structure contains fields which describe the stimulus at time t:
 - **pmax** is the stimulus diameter in degrees of visual angle
 - **pmin** is the minimum entertained pRF size in degrees of visual angle
 
-**Note \#1:** You will find an example script for producing this U structure in **scripts/prepare_inputs_polar_samsrf.m** . This reads in the stimuli as a 3D matrix of stimuli, where the third dimension indexes time, and produces the U structure.  
-
-**Note \#2:** The pRF models have been tested with the resolution of the stimuli downsampled to a [41 x 41] grid. We recommend you do the same with your stimuli. This is done for you in the example script.
+**Note:** The pRF models have been tested with the resolution of the stimuli downsampled to a [41 x 41] grid. We recommend you do the same with your stimuli. This is done for you in the example script.
 
 **2. Extract timeseries**
 
