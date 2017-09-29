@@ -12,7 +12,7 @@ Disadvantages:
 
 - Model estimation is computationally expensive (> 100 seconds per voxel per CPU core)
 
-*The toolbox is very new and still in development. So please enjoy using it, but treat results with caution. The corresponding paper is out in [Preprint](https://arxiv.org/abs/1612.00644) and is undergoing peer review.*
+*The toolbox is new and still in development. So please enjoy using it, but treat results with caution. The corresponding paper is  available at https://doi.org/10.1016/j.neuroimage.2017.09.008*
 
 | Contents |
 | -------- |
