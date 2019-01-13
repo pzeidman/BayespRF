@@ -78,7 +78,7 @@ for t = 1:num_regressors
     durations{t} = 0;
 end
 
-save('onsets.mat', 'names', 'onsets', 'durations');
+save(fullfile(pwd, 'onsets.mat'), 'names', 'onsets', 'durations');
 
 %% Specify first level design
 
