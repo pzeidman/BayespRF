@@ -15,6 +15,9 @@ nsess = 10;
 
 % Repetition time
 TR    = 1;
+%% Set defaults
+spm('defaults','FMRI')
+
 %% Download and unzip example data
 if ~exist(data_root_dir,'file')
     mkdir(data_root_dir);
