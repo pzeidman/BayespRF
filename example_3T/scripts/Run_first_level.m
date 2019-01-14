@@ -89,6 +89,7 @@ if ~exist(glm_dir,'file')
     mkdir(glm_dir);
 end
 
+% Load generic matlabbatch for fmri_spec, fmri_est and con(trast)
 load('first_level_batch.mat');
 
 % Session-specific options
@@ -109,7 +110,9 @@ end
 matlabbatch{1}.spm.stats.fmri_spec.dir = cellstr(glm_dir);
 matlabbatch{1}.spm.stats.fmri_spec.timing.RT = TR;
 
-% Run
+% Initialise job configuration
+spm_jobman('initcfg')
+% Run job
 spm_jobman('run',matlabbatch);
 
 cd(start_dir);
