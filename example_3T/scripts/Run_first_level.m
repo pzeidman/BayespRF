@@ -140,7 +140,8 @@ matlabbatch{1}.spm.stats.results.conspec.extent = 0;
 matlabbatch{1}.spm.stats.results.conspec.conjunction = 1;
 matlabbatch{1}.spm.stats.results.conspec.mask.none = 1;
 matlabbatch{1}.spm.stats.results.units = 1;
-matlabbatch{1}.spm.stats.results.export{1}.binary.basename = 'mask_uncorrected';
+% matlabbatch{1}.spm.stats.results.export{1}.binary.basename = 'mask_uncorrected';
+matlabbatch{1}.spm.stats.results.write.tspm.basename = 'mask_uncorrected';
 spm_jobman('run',matlabbatch);
 %% Remove voxels from the mask anterior to y = 0
 cd(glm_dir);
