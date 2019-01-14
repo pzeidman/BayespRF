@@ -4,8 +4,8 @@
 
 % Directory into which to download example dataset
 data_root_dir = 'D:\samdata\';
-data_dir      = fullfile(data_root_dir,'example','pRF');
-surf_dir      = fullfile(data_root_dir,'example','surf');
+data_dir      = fullfile(data_root_dir,'Example','pRF');
+surf_dir      = fullfile(data_root_dir,'Example','surf');
 
 % Directory for creating GLM
 glm_dir  = fullfile(pwd,'../GLM');
