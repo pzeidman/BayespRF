@@ -95,6 +95,14 @@ function varargout = spm_prf_analyse(mode,varargin)
 %            The use_parfor function requires the Matlab Computing Toolbox.
 %            Voxels' timeseries will be estimated in separate threads.
 %
+%            false - Run model fitting without parallelization.
+%
+%            true - Run model fitting with number of workers as set in
+%            Preferred Number of Workers in Parallel Computing toolbox.
+%
+%            integer (type double) - Run model fitting with specific
+%            number of cores as specified by the provided integer.
+%
 % -------------------------------------------------------------------------
 % Split a multi-voxel pRF model into separate files containing one or more
 % voxels each:
@@ -418,7 +426,17 @@ M.nograph = est_options.nograph;
 P = {};
 
 tic
-if est_options.use_parfor
+if est_options.use_parfor ~= 0
+    % Did user set sepecific number of cores?
+    if isa(est_options.use_parfor,'double')
+        fprintf('User specified number of cores: %d\n', ...
+                est_options.use_parfor)
+        % Shut down existing pool, if necessary 
+        if ~isempty(gcp('nocreate'))
+            delete(gcp('nocreate'));
+        end
+        parpool(est_options.use_parfor);
+    end
     % Run with parallel toolbox
     parfor i = voxels
         if ny > 1, fprintf('Voxel %d of %d\n', i, ny); end
