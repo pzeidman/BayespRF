@@ -266,7 +266,7 @@ end
 
 % Choose method of averaging multiple timeseries
 try 
-    options.avg_method
+    options.avg_method;
 catch
     options.avg_method = 'mean';
 end
