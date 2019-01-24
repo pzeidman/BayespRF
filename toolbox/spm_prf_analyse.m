@@ -385,6 +385,15 @@ try est_options.init;       catch, est_options.init       = 'GLM_P'; end
 try est_options.use_parfor; catch, est_options.use_parfor = false; end
 try est_options.nograph;    catch, est_options.nograph    = false; end
 
+% Make sure that nograph option is set true if use_parfor
+if est_options.use_parfor ~= 0
+    if ~est_options.nograph
+    warning('Set nograph to true for parallelisation');
+    est_options.nograp = true;
+    end
+end
+
+
 if ischar(PRF)
     if size(PRF,1) > 1
         error('Please provide only one PRF .mat file for estimation');
