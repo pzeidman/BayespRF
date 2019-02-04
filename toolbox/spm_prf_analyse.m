@@ -440,7 +440,7 @@ if est_options.use_parfor ~= 0
     if isa(est_options.use_parfor,'double')
         fprintf('User specified number of cores: %d\n', ...
                 est_options.use_parfor)
-        % Shut down existing pool, if necessary 
+        % Shut down existing pool, if necessary
         if ~isempty(gcp('nocreate'))
             delete(gcp('nocreate'));
         end
@@ -613,9 +613,11 @@ M.IS = options.model;
 try 
     M.pmax = U(1).pmax;
     M.pmin = U(1).pmin;
+    M.rmin = U(1).rmin;
 catch
     M.pmax = 2;
     M.pmin = 0;
+    M.rmin = 0;
 end
 
 % Neuronal priors
