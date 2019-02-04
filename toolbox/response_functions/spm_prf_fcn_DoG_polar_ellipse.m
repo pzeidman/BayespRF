@@ -223,7 +223,7 @@ function P = correct_parameters(P,M)
 
 % Constrain PRF centre
 radius    = M.pmax / 2;
-P.dist    = constrain_parameter(P.dist, 0, radius);
+P.dist    = constrain_parameter(P.dist, M.rmin, radius);
 P.angle   = constrain_parameter(P.angle, -pi, pi);
 
 % Convert log beta -> beta
