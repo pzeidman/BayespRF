@@ -28,7 +28,7 @@ n = size(ApFrm,3);
 
 % Cechk for optional inputs
 numvarargs = length(varargin);
-if numvarargs > 1
+if numvarargs > 3
     error('varargin:TooManyInputs', ...
           'requires at most 1 optional inputs');
 end
