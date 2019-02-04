@@ -10,6 +10,8 @@ function U = prepare_inputs_polar_samsrf(ApFrm,TR, nmicrotime, stim_duration, st
 % nmicrotime    - Bins per TR
 % stim_duration - Duration of stimuli (secs)
 % stim_diameter - Diameter of stimuli in degrees
+% pmin          - (optional) Minimum pRF size to be modelled, default 0.5
+% rmin          - (optional) Minimum radius of stimulated area, default 0
 % imscale       - (optional) Scale of image space for modelling, default 41
 
 %
@@ -32,14 +34,14 @@ if numvarargs > 1
 end
 
 % set defaults for optional inputs
-optargs = {41};
+optargs = {0.5, 0, 41};
 
 % now put these defaults into the valuesToUse cell array,
 % and overwrite the ones specified in varargin.
 optargs(1:numvarargs) = varargin;
 
 % Place optional args in memorable variable names
-[imscale] = optargs{:};
+[pmin, rmin, imscale] = optargs{:};
 
 for t = 1:n
 
@@ -79,7 +81,8 @@ for t = 1:n
     U(t).dur = stim_duration;  % Duration (secs)
     U(t).dt  = TR/nmicrotime;  % 1 bin=1/16 second, i.e. 16 bins per second
     U(t).pmax = stim_diameter; % Stimulus diameter
-    U(t).pmin = 0.5;           % Minimum PRF size
+    U(t).pmin = pmin;          % Minimum PRF size
+    U(t).rmin = rmin;          % Minimum radius of stimulated area
 
     t = t + 1;
 end
