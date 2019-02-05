@@ -19,11 +19,6 @@ function U = prepare_inputs_polar_samsrf(ApFrm,TR, nmicrotime, stim_duration, st
 %
 % U           - Input structure to feed to spm_prf_analyse.m
 
-% Settings
-nmicrotime    = 16;     % Bins per TR
-stim_duration = 1;      % Duration of stimuli (secs)
-stim_diameter = 17;     % Diameter of stimuli in degrees
-
 n = size(ApFrm,3);
 
 % Cechk for optional inputs

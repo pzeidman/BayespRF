@@ -13,8 +13,12 @@ glm_dir  = fullfile(pwd,'../GLM');
 % Number of sessions
 nsess = 10;
 
-% Repetition time
-TR    = 1;
+% Settings
+TR            = 1;      % Repetition time
+nmicrotime    = 16;     % Bins per TR
+stim_duration = 1;      % Duration of stimuli (secs)
+stim_diameter = 17;     % Diameter of stimuli in degrees
+
 %% Set defaults
 spm('defaults','FMRI')
 
@@ -34,7 +38,7 @@ unzip(fn, data_root_dir);
 fprintf(' %30s\n', '...done');
 %% Prepare onsets
 load(fullfile(data_dir,'aps_Bars.mat'));
-U = prepare_inputs_polar_samsrf(ApFrm,TR);
+U = prepare_inputs_polar_samsrf(ApFrm,TR, nmicrotime, stim_duration, stim_diameter);
 
 bins_x = [-8.5 0 8.5];
 bins_y = [8.5 0 -8.5];
