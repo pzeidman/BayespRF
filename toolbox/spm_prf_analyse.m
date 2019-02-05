@@ -407,6 +407,7 @@ else
     do_save = false;
 end
 
+% Get number of voxels
 ny = size(PRF.Y.y,2);
 
 % Unpack PRF
@@ -533,8 +534,10 @@ function [pE,pC,P] = initialize_model(M,U,y,i,est_options)
 % pC - Initialized prior covariance of parameters
 % P  - Starting values of parameter search
 
+% Get prior mean and variance for ith voxel
 pE = M.pE{i};
 pC = M.pC{i};
+% Set initial guess for parameters to prior mean
 P  = pE;
 
 switch upper(est_options.init)

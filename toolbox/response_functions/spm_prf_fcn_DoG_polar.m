@@ -304,7 +304,9 @@ sigma   = kron(ones(n_mu,1), sigma);
 sigma   = sigma(:);
 k       = [repmat(mu,n_sigma,1) sigma];
 
+% Get number of parameter combinations
 nm = size(k,1);
+% Initialise vector full of zeros for sum of squared error
 sse = zeros(1, nm);
 
 for i = 1:nm
