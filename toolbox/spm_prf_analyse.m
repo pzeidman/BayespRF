@@ -470,6 +470,7 @@ else
         if ny > 1, fprintf('Voxel %d of %d\n', i, ny); end
 
         % Initialize priors
+        % Depending on est_options.init this either updates P or pE
         [pE{i},pC{i},P{i}] = initialize_model(M,U,Y.y,i,est_options);
 
         % Model updated with initialized priors
@@ -542,6 +543,7 @@ P  = pE;
 
 switch upper(est_options.init)
     case 'GLM'
+        % Update pE - the prior means
         fprintf('Initializing priors using GLM\n');
         
         P_glm = feval(M.IS,pE,M,U,'glm_initialize',y(:,i));
@@ -552,6 +554,7 @@ switch upper(est_options.init)
         end
         
     case 'GLM_P'
+        % Update P - the initial starting values
         fprintf('Initializing starting value using GLM\n');
         
         P_glm = feval(M.IS,pE,M,U,'glm_initialize',y(:,i));
