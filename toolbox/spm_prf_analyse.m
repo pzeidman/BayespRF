@@ -63,6 +63,9 @@ function varargout = spm_prf_analyse(mode,varargin)
 %                  'avg_sess',true, ...   % average sessions' timeseries
 %                  'avg_method','mean'    % accepts 'mean' or 'eigen'
 %                  'delays', TR / 2 ...   % microtime offset
+%                  'pE', struct, ...      % (optional) prior means
+%                  'pC', struct, ...      % (optional) prior variance
+%                  'name', char, ...      % (optional) name of PRF file
 %              );
 %
 % -------------------------------------------------------------------------
@@ -543,6 +546,7 @@ P  = pE;
 
 switch upper(est_options.init)
     case 'GLM'
+        
         % Update pE - the prior means
         fprintf('Initializing priors using GLM\n');
         
@@ -563,7 +567,7 @@ switch upper(est_options.init)
         for i = 1:length(fields)
             P.(fields{i}) = P_glm.(fields{i});
         end
-        
+
     case 'NONE'
         % No initialization
     otherwise
@@ -654,10 +658,26 @@ switch M.B0
         error('Please choose your closest field strength - 1.5,3 or 7');
 end
 
-% Apply to all PRFs
-for v = 1:nv
-    M.pE{v} = pE;
-    M.pC{v} = pC;
+% Check if custom or default prior means should be applied
+if ~isfield(options,'pE')
+    for v = 1:nv
+        M.pE{v} = pE;
+    end
+else
+    msg = 'Voxels in custom prior do not match voxels in analysis\n';
+    assert(length(options.pE) == nv,msg) 
+    M.pE = options.pE;
+end
+
+% Check if custom or default prior variances should be applied
+if ~isfield(options,'pC')
+    for v = 1:nv
+        M.pC{v} = pC;
+    end
+else
+    msg = 'Voxels in custom prior do not match voxels in analysis\n';
+    assert(length(options.pC) == nv,msg) 
+    M.pC = options.pC;
 end
 
 % Starting values
