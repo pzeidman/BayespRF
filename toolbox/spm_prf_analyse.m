@@ -440,16 +440,6 @@ P = {};
 
 tic
 if est_options.use_parfor ~= 0
-    % Did user set sepecific number of cores?
-    if isa(est_options.use_parfor,'double')
-        fprintf('User specified number of cores: %d\n', ...
-                est_options.use_parfor)
-        % Shut down existing pool, if necessary
-        if ~isempty(gcp('nocreate'))
-            delete(gcp('nocreate'));
-        end
-        parpool(est_options.use_parfor);
-    end
     % Run with parallel toolbox
     parfor i = voxels
         if ny > 1, fprintf('Voxel %d of %d\n', i, ny); end
@@ -658,26 +648,42 @@ switch M.B0
         error('Please choose your closest field strength - 1.5,3 or 7');
 end
 
-% Check if custom or default prior means should be applied
-if ~isfield(options,'pE')
+% Override these priors with custom priors if provided
+if isfield(options,'pE'), pE = options.pE; end
+if isfield(options,'pC'), pC = options.pC; end
+
+% Assign prior expectations to voxels
+if isstruct(pE) && (length(pE) == 1)
+    % One set of expectations for all voxels
     for v = 1:nv
         M.pE{v} = pE;
     end
-else
-    msg = 'Voxels in custom prior do not match voxels in analysis\n';
-    assert(length(options.pE) == nv,msg) 
-    M.pE = options.pE;
+elseif isstruct(pE) && (length(pE) > 1)
+    % Different expectations per voxel
+    assert(length(pE) == nv,...
+        'Number of voxels in prior spec does not match the model');    
+    for v = 1:nv
+        M.pE{v} = pE(v);
+    end    
+else 
+    error('Unknown prior expectation specification');
 end
-
-% Check if custom or default prior variances should be applied
-if ~isfield(options,'pC')
+    
+% Assign prior covariances to voxels
+if isstruct(pC) && (length(pC) == 1)
+    % One set of expectations for all voxels
     for v = 1:nv
         M.pC{v} = pC;
     end
-else
-    msg = 'Voxels in custom prior do not match voxels in analysis\n';
-    assert(length(options.pC) == nv,msg) 
-    M.pC = options.pC;
+elseif isstruct(pC) && (length(pC) > 1)
+    % Different expectations per voxel
+    assert(length(pC) == nv,...
+        'Number of voxels in prior spec does not match the model');    
+    for v = 1:nv
+        M.pC{v} = pC(v);
+    end    
+else 
+    error('Unknown prior covariance specification');
 end
 
 % Starting values

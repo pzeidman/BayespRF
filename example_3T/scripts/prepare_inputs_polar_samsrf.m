@@ -21,14 +21,14 @@ function U = prepare_inputs_polar_samsrf(ApFrm,TR, nmicrotime, stim_duration, st
 
 n = size(ApFrm,3);
 
-% Cechk for optional inputs
+% Check for optional inputs
 numvarargs = length(varargin);
 if numvarargs > 3
     error('varargin:TooManyInputs', ...
           'requires at most 1 optional inputs');
 end
 
-% set defaults for optional inputs
+% set defaults for optional inputs (pmin, rmin, imscale)
 optargs = {0.5, 0, 41};
 
 % now put these defaults into the valuesToUse cell array,

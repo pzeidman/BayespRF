@@ -10,6 +10,9 @@ surf_dir      = fullfile(data_root_dir,'Example','surf');
 % Directory for creating GLM
 glm_dir  = fullfile(pwd,'../GLM');
 
+% Directory containing this script
+script_dir = pwd;
+
 % Number of sessions
 nsess = 10;
 
@@ -21,6 +24,7 @@ stim_diameter = 17;     % Diameter of stimuli in degrees
 
 %% Set defaults
 spm('defaults','FMRI')
+spm_jobman('initcfg')
 
 %% Download and unzip example data
 if ~exist(data_root_dir,'file')
@@ -38,7 +42,7 @@ unzip(fn, data_root_dir);
 fprintf(' %30s\n', '...done');
 %% Prepare onsets
 load(fullfile(data_dir,'aps_Bars.mat'));
-U = prepare_inputs_polar_samsrf(ApFrm,TR, nmicrotime, stim_duration, stim_diameter);
+U = prepare_inputs_polar_samsrf(ApFrm,TR,nmicrotime,stim_duration,stim_diameter);
 
 bins_x = [-8.5 0 8.5];
 bins_y = [8.5 0 -8.5];
@@ -82,7 +86,7 @@ for t = 1:num_regressors
     durations{t} = 0;
 end
 
-save(fullfile(pwd, 'onsets.mat'), 'names', 'onsets', 'durations');
+save(fullfile(script_dir, 'onsets.mat'), 'names', 'onsets', 'durations');
 
 %% Specify first level design
 
@@ -114,8 +118,6 @@ end
 matlabbatch{1}.spm.stats.fmri_spec.dir = cellstr(glm_dir);
 matlabbatch{1}.spm.stats.fmri_spec.timing.RT = TR;
 
-% Initialise job configuration
-spm_jobman('initcfg')
 % Run job
 spm_jobman('run',matlabbatch);
 
@@ -144,8 +146,7 @@ matlabbatch{1}.spm.stats.results.conspec.extent = 0;
 matlabbatch{1}.spm.stats.results.conspec.conjunction = 1;
 matlabbatch{1}.spm.stats.results.conspec.mask.none = 1;
 matlabbatch{1}.spm.stats.results.units = 1;
-% matlabbatch{1}.spm.stats.results.export{1}.binary.basename = 'mask_uncorrected';
-matlabbatch{1}.spm.stats.results.write.tspm.basename = 'mask_uncorrected';
+matlabbatch{1}.spm.stats.results.export{1}.binary.basename = 'mask_uncorrected';
 spm_jobman('run',matlabbatch);
 %% Remove voxels from the mask anterior to y = 0
 cd(glm_dir);
@@ -177,7 +178,7 @@ matlabbatch{1}.spm.util.voi.name   = [hemi '_prf_mask'];
 matlabbatch{1}.spm.util.voi.spmmat = cellstr(fullfile(glm_dir,'SPM.mat'));
 matlabbatch{1}.spm.util.voi.roi{1}.mask.image = cellstr(spm_F_mask);
 matlabbatch{1}.spm.util.voi.roi{2}.mask.image = cellstr(surface_mask);
-matlabbatch{1}.spm.util.voi.expression        = 'i1 & i2';
+matlabbatch{1}.spm.util.voi.expression = 'i1 & i2';
 
 % Run batch
 spm_jobman('run',matlabbatch);

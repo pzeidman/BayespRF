@@ -1,5 +1,6 @@
 % Example script to run a simple pRF analysis on a voxel-by-voxel basis 
-% and view the results.
+% and view the results. You may wish to run this script section by section
+% to get a feel of how it works.
 %
 % Neuronal model:      Single Gaussian function
 % Receptive field:     Circular (isotropic)
@@ -16,8 +17,11 @@ data_dir      = fullfile(data_root_dir,'example','pRF');
 % Directory of GLM
 glm_dir  = fullfile(pwd,'../GLM');
 
-TR = 1;         % Repetition time
-TE = 0.055;     % Echo time
+TR = 1;             % Repetition time
+TE = 0.055;         % Echo time
+nmicrotime    = 16; % Bins per TR
+stim_duration = 1;  % Stimulus duration in secs
+stim_diameter = 17; % Diameter of stimuli in degrees
 
 % Which sessions to include
 sess = 1:10;
@@ -31,7 +35,7 @@ hemi = 'lh';
 % Build a structure containing which stimulus pixels were illuminated at
 % each time step.
 load(fullfile(data_dir,'aps_Bars.mat'));
-U = prepare_inputs_polar_samsrf(ApFrm,TR);
+U = prepare_inputs_polar_samsrf(ApFrm,TR,nmicrotime,stim_duration,stim_diameter);
 
 % The timeseries from each session are stored in a VOI_xx.mat file. Build a
 % cell array of the VOI files for each session.
@@ -59,8 +63,8 @@ options = struct('TE', TE,...
 % Specify pRF model (.mat file will be stored in the GLM directory)
 PRF = spm_prf_analyse('specify',SPM,xY,U,options);
 
-%% Estimate one voxel as an example (voxel 1)
-voxel = 1;
+%% Estimate one voxel as an example (voxel 1395, the global peak)
+voxel = 1395;
 
 % Model to estimate
 prf_file = fullfile(glm_dir,['PRF_' hemi '_SamSrf_example.mat']);
